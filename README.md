@@ -45,7 +45,7 @@ To clone and run the project, please follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/hanibalgirmay/menu-management.git
+   git clone https://gitlab.com/hanibalgirmay/menu-management.git
    ```
    ```cd menu-management```
 
