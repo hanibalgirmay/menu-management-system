@@ -4,18 +4,20 @@ FROM node:18
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (or yarn.lock)
-COPY package*.json ./
+# Copy package.json and pnpm-lock.yaml
+COPY package*.json pnpm-lock.yaml ./
 
-RUN npm install -g @prisma/cli
-# Install dependencies
-RUN npm install
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Install dependencies using pnpm
+RUN pnpm install
 
 # Copy the rest of the application files
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm run build
 
 # Expose the port the app runs on
 EXPOSE 7000

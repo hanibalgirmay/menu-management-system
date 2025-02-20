@@ -6,7 +6,7 @@ services:
       context: ./apps/api
       dockerfile: Dockerfile
     ports:
-      - '3001:7000'
+      - '7000:7000'
     environment:
       DATABASE_URL: postgresql://hb_admin:1234566@127.0.0.1:5432/menu_management?schema=public
     depends_on:
