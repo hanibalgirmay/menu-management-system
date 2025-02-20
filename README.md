@@ -33,11 +33,11 @@ menu-management/
 ```
 ### Screenshot
 
-![Menu Management Screenshot](/screenshoots//Screenshot%202025-02-20%20100957.png)
-![Menu Management Screenshot](/screenshoots//Screenshot%202025-02-20%20101043.png)
-![Menu Management Screenshot](/screenshoots//Screenshot%202025-02-20%20103610.png)
-![Menu Management Screenshot](/screenshoots//Screenshot%202025-02-20%20113040.png)
-![Menu Management Screenshot](/screenshoots//Screenshot%202025-02-20%20113059.png)
+![Menu Management Screenshot](screenshoots//Screenshot%202025-02-20%20100957.png)
+![Menu Management Screenshot](screenshoots//Screenshot%202025-02-20%20101043.png)
+![Menu Management Screenshot](screenshoots//Screenshot%202025-02-20%20103610.png)
+![Menu Management Screenshot](screenshoots//Screenshot%202025-02-20%20113040.png)
+![Menu Management Screenshot](screenshoots//Screenshot%202025-02-20%20113059.png)
 
 ### Cloning and Running the Project
 
