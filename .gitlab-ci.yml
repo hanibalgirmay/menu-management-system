@@ -9,15 +9,19 @@ variables:
   BACKEND_IMAGE: menu-api-image
   FRONTEND_IMAGE: menu-front-image
 
-before_script:
-    - npm install -g pnpm
+install_dependencies:
+  stage: install
+  script:
+    - npm install 
+    - npx pnpm install
+  only:
+    - main
 
 build_backend:
   stage: build
   script:
     - cd apps/api
-    - pnpm install
-    - pnpm run build
+    - pnpm build
     - docker build -t $BACKEND_IMAGE .
   only:
     - main
@@ -28,8 +32,7 @@ build_frontend:
   stage: build
   script:
     - cd apps/web
-    - pnpm install
-    - pnpm run build
+    - pnpm build
     - docker build -t $FRONTEND_IMAGE .
   only:
     - main
