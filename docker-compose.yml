@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - '3001:7000'
+    environment:
+      DATABASE_URL: postgresql://hb_admin:1234566@127.0.0.1:5432/menu_management?schema=public
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - '3000:7002'
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: hb_admin
+      POSTGRES_PASSWORD: 1234566
+      POSTGRES_DB: menu_management
+    ports:
+      - '5432:5432'
