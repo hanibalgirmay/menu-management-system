@@ -9,10 +9,6 @@ variables:
   BACKEND_IMAGE: menu-api-image
   FRONTEND_IMAGE: menu-front-image
 
-before_script:
-  - apk add --no-cache bash
-  - npm install -g @prisma/cli
-
 build_backend:
   stage: build
   script:
