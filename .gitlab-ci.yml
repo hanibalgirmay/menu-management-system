@@ -10,7 +10,8 @@ variables:
   FRONTEND_IMAGE: menu-front-image
 
 before_script:
-    - npm install -g pnpm --unsafe-perm
+    - npm install
+    - npx pnpm install 
 
 build_backend:
   stage: build
