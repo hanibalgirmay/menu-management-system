@@ -194,13 +194,13 @@ const TreeView: React.FC<TreeViewProps> = ({ data, handleButtonClicked }) => {
     >
       <div className="mb-4 flex justify-start my-7 gap-4">
         <button
-          className="md:px-8 px-2 py-0 md:text-sm text-xs rounded-full bg-black text-white"
+          className="md:px-8 px-2 py-0 md:w-[200px] w-full md:text-sm text-xs rounded-full bg-black text-white"
           onClick={() => expandAll(data)}
         >
           Expand All
         </button>
         <button
-          className="md:px-6 px-2 py-2 border rounded-full bg-transparent text-black"
+          className="md:px-6 px-2 md:w-[200px] w-full py-2 border rounded-full bg-transparent text-black"
           onClick={collapseAll}
         >
           Collapse All

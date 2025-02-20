@@ -92,7 +92,7 @@ const RootPage = () => {
 
   const renderMenuItems = () => {
     return (
-      <div className="w-fit min-w-[400px]">
+      <div className="md:w-[400px] w-full">
         <FormProvider {...methods}>
           <CustomProvider handleFormSubmit={methods.handleSubmit(handleSelect)}>
             <CustomSelect
@@ -129,7 +129,7 @@ const RootPage = () => {
         <h1 className="text-2xl font-semibold">Menus</h1>
       </div>
 
-      <div className="grid grid-cols-4 gap-8 justify-start items-start w-full">
+      <div className="grid md:grid-cols-4 grid-cols-1 gap-8 justify-start items-start w-full">
         <div className="w-full col-span-2 rounded-lg border-0 p-4">
           <div className="mt-4">
             {renderMenuItems()}

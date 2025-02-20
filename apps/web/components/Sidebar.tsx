@@ -64,7 +64,7 @@ export function Sidebar() {
   };
   return (
     <div
-      className={`w-${isMenuOpen ? '64' : '16'} border-r m-5 rounded-3xl bg-[#101828] text-white`}
+      className={`w-${isMenuOpen ? '64' : '16'} border-r m-5 rounded-3xl bg-[#101828] text-white md:block hidden`}
     >
       <div className="p-6 flex justify-between items-center">
         <h1 className={`text-xl font-bold ${isMenuOpen ? '' : 'hidden'}`}>
