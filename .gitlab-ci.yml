@@ -9,6 +9,9 @@ variables:
   BACKEND_IMAGE: menu-api-image
   FRONTEND_IMAGE: menu-front-image
 
+before_script:
+    - npm install -g pnpm --unsafe-perm
+
 build_backend:
   stage: build
   script:
@@ -26,7 +29,7 @@ build_frontend:
   script:
     - cd apps/web
     - pnpm install
-    - pnpm run build
+    -  run build
     - docker build -t $FRONTEND_IMAGE .
   only:
     - main
