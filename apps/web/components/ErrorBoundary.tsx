@@ -26,7 +26,12 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+      return <div className='rounded-md p-6 w-full flex justify-center items-center'>
+        <div className='border p-6 rounded-md shadow-md'>
+          <h2 className='font-semibold font-mono'>Something went wrong.</h2>
+          <span>Check backend API connection</span>
+        </div>
+      </div>;
     }
 
     return this.props.children;

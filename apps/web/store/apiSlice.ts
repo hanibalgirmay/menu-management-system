@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchMenu, getMenuData, createMenu } from '../service/apiService';
+import {
+  fetchMenu,
+  getMenuData,
+  createMenu,
+  updateMenu,
+  deleteMenu,
+} from '../service/apiService';
 import { CreateMenuPayload, MenuNode } from '../types/types';
 
 interface ApiState {
@@ -36,6 +42,22 @@ export const createNewMenu = createAsyncThunk(
   'api/createMenu',
   async (data: CreateMenuPayload) => {
     const response = await createMenu(data);
+    return response;
+  },
+);
+
+export const updateExistingMenu = createAsyncThunk(
+  'api/updateMenu',
+  async ({ id, data }: { id: string; data: CreateMenuPayload }) => {
+    const response = await updateMenu(data, id);
+    return response;
+  },
+);
+
+export const removeMenu = createAsyncThunk(
+  'api/deleteMenu',
+  async (id: string) => {
+    const response = await deleteMenu(id);
     return response;
   },
 );
@@ -80,6 +102,37 @@ const apiSlice = createSlice({
         state.data.push(action.payload);
       })
       .addCase(createNewMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'An error occurred';
+      })
+      .addCase(updateExistingMenu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateExistingMenu.fulfilled, (state, action) => {
+        state.loading = false;
+        // Find the index of the updated menu node and replace it
+        const index = state.data.findIndex(
+          (item) => item.id === action.payload.id,
+        );
+        if (index !== -1) {
+          state.data[index] = action.payload;
+        }
+      })
+      .addCase(updateExistingMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'An error occurred';
+      })
+      .addCase(removeMenu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeMenu.fulfilled, (state, action) => {
+        state.loading = false;
+        // Remove the deleted menu node from the data array
+        state.data = state.data.filter((item) => item.id !== action.meta.arg);
+      })
+      .addCase(removeMenu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'An error occurred';
       });

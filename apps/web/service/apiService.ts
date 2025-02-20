@@ -7,7 +7,7 @@ export const fetchMenu = async (): Promise<MenuNode[]> => {
   //   throw new Error('Network response was not ok');
   // }
   console.log('fetching api data.......___', response);
-// @ts-ignore
+  // @ts-ignore
   return response;
 };
 
@@ -21,6 +21,21 @@ export const createMenu = async (
   data: CreateMenuPayload,
 ): Promise<MenuNode> => {
   const response = await axiosInstance.post('/tree-node', data);
+  // @ts-ignore
+  return response;
+};
+
+export const updateMenu = async (
+  data: CreateMenuPayload,
+  id: string,
+): Promise<MenuNode> => {
+  const response = await axiosInstance.put(`/tree-node/${id}`, data);
+  // @ts-ignore
+  return response;
+};
+
+export const deleteMenu = async (id: string): Promise<MenuNode> => {
+  const response = await axiosInstance.delete(`/tree-node/${id}`);
   // @ts-ignore
   return response;
 };

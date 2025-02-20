@@ -11,120 +11,14 @@ import CustomToggle from '../components/form/CustomToggle';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MenuSchemaValidation, MenuType } from '../utils/schema.validation';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNewMenu, fetchMenuData, fetchMenuDataById } from '../store/apiSlice';
+import {
+  createNewMenu,
+  fetchMenuData,
+  fetchMenuDataById,
+  removeMenu,
+  updateExistingMenu,
+} from '../store/apiSlice';
 import { RootState } from '../store';
-
-const treeData: TreeNode[] = [
-  {
-    id: '1',
-    label: 'System Management',
-    children: [
-      {
-        id: '1.1',
-        label: 'Systems',
-        children: [
-          {
-            id: '1.1.1',
-            label: 'System Code',
-            children: [
-              {
-                id: '1.1.1.1',
-                label: 'Code Registration',
-                children: [],
-              },
-            ],
-          },
-          {
-            id: '1.1.2',
-            label: 'Code Registeration 2',
-            children: [],
-          },
-          {
-            id: '1.1.3',
-            label: 'Properties',
-            children: [],
-          },
-          {
-            id: '1.1.4',
-            label: 'Menus',
-            children: [
-              {
-                id: '1.1.3.1',
-                label: 'Menu Registration',
-                children: [],
-              },
-            ],
-          },
-          {
-            id: '1.1.5',
-            label: 'APIList',
-            children: [
-              {
-                id: '1.1.5.1',
-                label: 'API Registration',
-                children: [],
-              },
-              {
-                id: '1.1.5.2',
-                label: 'API Edit',
-                children: [],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: '1.2',
-        label: 'API List',
-        children: [
-          {
-            id: '1.2.1',
-            label: 'API Registration',
-            children: [],
-          },
-          {
-            id: '1.2.2',
-            label: 'API Edit',
-            children: [],
-          },
-        ],
-      },
-      {
-        id: '1.3',
-        label: 'Users & Groups',
-        children: [
-          {
-            id: '1.3.1',
-            label: 'Users',
-            children: [
-              {
-                id: '1.3.1.1',
-                label: 'User Account Registration',
-                children: [],
-              },
-            ],
-          },
-          {
-            id: '1.3.2',
-            label: 'Groups',
-            children: [
-              {
-                id: '1.3.2.1',
-                label: 'User Group Registration',
-                children: [],
-              },
-            ],
-          },
-          {
-            id: '1.3.3',
-            label: '사용자 승인',
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-];
 
 const RootPage = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -132,6 +26,7 @@ const RootPage = () => {
   const dispatch = useDispatch();
 
   const methods = useForm();
+  const editMethods = useForm();
   const newMethods = useForm<MenuType>({
     mode: 'all',
     resolver: zodResolver(MenuSchemaValidation),
@@ -141,7 +36,9 @@ const RootPage = () => {
   const watchSelectedMenu = methods.watch('menu');
 
   //fetch data from store state
-  const { data, loading, error, selectedMenuNode } = useSelector((state: RootState) => state.api);
+  const { data, loading, error, selectedMenuNode } = useSelector(
+    (state: RootState) => state.api,
+  );
   if (error) {
     return <p>Error: {error}</p>;
   }
@@ -166,21 +63,36 @@ const RootPage = () => {
     newMethods.reset();
   };
 
+  const handleEditMenu = (data: any) => {
+    console.log('edit', data);
+    //@ts-ignore
+    editMethods.reset();
+  };
+  
+  const handleDeleteMenu = () => {
+    //getValue
+    const id = editMethods.getValues('id')
+    // @ts-ignore
+    dispatch(removeMenu(id));
+    // @ts-ignore
+    dispatch(fetchMenuData());
+    editMethods.reset();
+  }
+
   useEffect(() => {
-    console.log('fetching api data...', data);
     //@ts-ignore
     dispatch(fetchMenuData());
   }, [dispatch]);
 
   useEffect(() => {
-    if(!["Choose a Menu", undefined].includes(watchSelectedMenu)){
+    if (!['Choose a Menu', undefined].includes(watchSelectedMenu)) {
       handleSelect(watchSelectedMenu);
     }
-  },[watchSelectedMenu]);
+  }, [watchSelectedMenu]);
 
   const renderMenuItems = () => {
     return (
-      <div className="w-full">
+      <div className="w-fit min-w-[400px]">
         <FormProvider {...methods}>
           <CustomProvider handleFormSubmit={methods.handleSubmit(handleSelect)}>
             <CustomSelect
@@ -200,6 +112,14 @@ const RootPage = () => {
     );
   };
 
+  const handleEdit = (data:any) => {
+    editMethods.setValue('id', data?.id);
+    editMethods.setValue('label', data?.label);
+    editMethods.setValue('depth', data?.depth);
+    editMethods.setValue('parentId', data?.parentId);
+    editMethods.setValue('parentData', data?.parent?.label);
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center gap-3">
@@ -209,17 +129,53 @@ const RootPage = () => {
         <h1 className="text-2xl font-semibold">Menus</h1>
       </div>
 
-      <div className="grid grid-cols-3 gap-8 w-full">
+      <div className="grid grid-cols-4 gap-8 justify-start items-start w-full">
         <div className="w-full col-span-2 rounded-lg border-0 p-4">
           <div className="mt-4">
             {renderMenuItems()}
 
-            {selectedMenuNode && <TreeView data={selectedMenuNode} />}
+            {selectedMenuNode && <TreeView handleButtonClicked={handleEdit} data={selectedMenuNode} />}
           </div>
         </div>
-        <div className="w-full rounded-lg border-0 p-4">form</div>
+        <div className="w-full col-span-2 mt-32 rounded-lg border-0 p-4">
+          {editMethods.watch('id') && <div className="flex flex-col gap-4">
+            <FormProvider {...editMethods}>
+              <CustomProvider
+                handleFormSubmit={editMethods.handleSubmit(handleEditMenu)}
+              >
+                <div className="flex flex-col gap-4">
+                    <CustomInput name="id" disabled label="" type='hidden' />
+                  <div className="w-full">
+                    <CustomInput name="parentId" disabled label="Menu ID" />
+                  </div>
+                  <div className="w-1/2">
+                    <CustomInput name="depth" label="Depth" disabled />
+                    <div></div>
+                  </div>
+                  <div className="w-1/2">
+                    <CustomInput name="parentData" label="Parent Data" />
+                  </div>
+                  <div className="w-1/2">
+                    <CustomInput name="label" label="Name" />
+                  </div>
+
+                  <div className='flex gap-4'>
+                    <button type='submit' className="w-1/4 mt-3 bg-indigo-600 px-2 py-2 rounded-3xl text-white font-semibold">
+                      Save
+                    </button>
+                    <button onClick={handleDeleteMenu} disabled={!editMethods.watch('id')} type='button' className="w-1/4 mt-3 bg-red-600 px-2 py-2 rounded-3xl text-white font-semibold disabled:opacity-45 disabled:pointer-events-none">
+                      Delete
+                    </button>
+
+                  </div>
+                </div>
+              </CustomProvider>
+            </FormProvider>
+          </div>}
+        </div>
       </div>
 
+    {/* modal */}
       <div className="fixed bottom-10 right-10">
         <button
           onClick={() => setOpenModal(true)}
@@ -315,6 +271,8 @@ const RootPage = () => {
           </div>
         </div>
       )}
+
+      {/* modal */}
     </div>
   );
 };

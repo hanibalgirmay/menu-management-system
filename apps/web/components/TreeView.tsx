@@ -11,9 +11,10 @@ interface TreeNode {
 
 interface TreeViewProps {
   data: TreeNode[];
+  handleButtonClicked?:(props:any) => void | undefined
 }
 
-const TreeView: React.FC<TreeViewProps> = ({ data }) => {
+const TreeView: React.FC<TreeViewProps> = ({ data, handleButtonClicked }) => {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   console.log('receve data: ', data);
@@ -113,11 +114,8 @@ const TreeView: React.FC<TreeViewProps> = ({ data }) => {
     ));
   };
 
-  const handleForm = (id) => {
-    console.log('tree parent ID: ', id);
-  };
 
-  const TreeNodeComponent = ({ node, expandedNodes, toggleNode }) => {
+  const TreeNodeComponent = ({ node, expandedNodes, toggleNode, index = 0, parentNode = null }) => {
     return (
       <div
         key={node?.id}
@@ -150,7 +148,7 @@ const TreeView: React.FC<TreeViewProps> = ({ data }) => {
           <div className="absolute -right-5 top-1.5 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
               type="button"
-              onClick={() => handleForm(node.id)}
+              onClick={() => handleButtonClicked({...node, depth: index, parent:parentNode})}
               className="bg-indigo-600 rounded-full size-5 flex justify-center items-center"
             >
               <Plus size={12} color="white" />
@@ -175,6 +173,8 @@ const TreeView: React.FC<TreeViewProps> = ({ data }) => {
                       node={childNode}
                       expandedNodes={expandedNodes}
                       toggleNode={toggleNode}
+                      index={index + 1}
+                      parentNode={node}
                     />
                   </div>
                 </div>

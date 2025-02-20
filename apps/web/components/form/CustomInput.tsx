@@ -8,11 +8,13 @@ interface IInputProp {
   label: string;
   type?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 const CustomInput: React.FC<IInputProp> = ({
   name,
   type = 'text',
   label,
+  disabled,
   placeholder,
 }) => {
   const { register } = useFormContext();
@@ -29,6 +31,7 @@ const CustomInput: React.FC<IInputProp> = ({
         type={type}
         {...register(name)}
         id={name}
+        disabled={disabled}
         className="bg-gray-50 border border-gray-100 text-gray-900 text-sm rounded-2xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white disabled:bg-[#EAECF0] disabled:cursor-not-allowed disabled:pointer-events-none"
         placeholder={placeholder}
       />
